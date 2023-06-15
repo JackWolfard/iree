@@ -63,6 +63,10 @@ print_toolchain_config() {
   if $has_clang; then
     echo "-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
   fi
+  # if $has_lld; then
+  #   echo "-DCMAKE_LINKER=lld"
+  # fi
+
 }
 
 do_build_llvm() {
@@ -124,8 +128,8 @@ print_iree_config() {
   # TODO: There seem to be utility exports missing from installed MLIR,
   # so using the build tree for now. This isn't great but needs fixing
   # upstream.
-  #mlir_cmake_dir="${LLVM_INSTALL_DIR}/mlir/lib/cmake/mlir"
-  mlir_cmake_dir="${LLVM_BUILD_DIR}/mlir/lib/cmake/mlir"
+  mlir_cmake_dir="${LLVM_INSTALL_DIR}/llvm/lib/cmake/mlir"
+  # mlir_cmake_dir="${LLVM_BUILD_DIR}/mlir/lib/cmake/mlir"
 
   if ! [ -d "$llvm_cmake_dir" ]; then
     echo "WARNING: CMake dir does not exist ($llvm_cmake_dir)" >&2
@@ -144,7 +148,7 @@ print_iree_config() {
     return 1
   fi
 
-  echo "-DLLVM_DIR='$llvm_cmake_dir' -DLLD_DIR='$lld_cmake_dir' -DCLANG_DIR='$clang_cmake_dir' -DMLIR_DIR='$mlir_cmake_dir' -DIREE_BUILD_BUNDLED_LLVM=OFF"
+  echo "-DLLVM_DIR='$llvm_cmake_dir' -DLLD_DIR='$lld_cmake_dir' -DClang_DIR='$clang_cmake_dir' -DMLIR_DIR='$mlir_cmake_dir' -DIREE_BUILD_BUNDLED_LLVM=OFF"
 }
 
 do_build_iree() {
@@ -153,8 +157,8 @@ do_build_iree() {
   iree_install_dir="${LLVM_INSTALL_DIR}/iree"
 
   cmake_options="$(print_iree_config)"
-  cmake_options="${cmake_options} -DPython3_EXECUTABLE='$(which $python3_command)'"
-  cmake_options="${cmake_options} -DIREE_BUILD_PYTHON_BINDINGS=ON"
+  # cmake_options="${cmake_options} -DPython3_EXECUTABLE='$(which $python3_command)'"
+  # cmake_options="${cmake_options} -DIREE_BUILD_PYTHON_BINDINGS=ON"
   cmake_options="${cmake_options} -DIREE_TARGET_BACKEND_DEFAULTS=OFF"
   cmake_options="${cmake_options} -DIREE_HAL_DRIVER_DEFAULTS=OFF"
   cmake_options="${cmake_options} -DIREE_HAL_DRIVER_LOCAL_SYNC=ON"
