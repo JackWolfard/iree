@@ -50,9 +50,10 @@ set(LLVM_MLIR_TOOLS
     CACHE STRING "")
 
 set(LLVM_MlirDevelopment_DISTRIBUTION_COMPONENTS
+      mlir-mlirdevelopment-cmake-exports
       mlir-cmake-exports
       mlir-headers
       mlir-libraries
-      MLIRPythonModules
+      # MLIRPythonModules
       ${LLVM_MLIR_TOOLS}
     CACHE STRING "")

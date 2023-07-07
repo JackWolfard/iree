@@ -109,11 +109,11 @@ do_build_mlir() {
   echo "*********************** BUILDING MLIR *********************************"
   main_install_dir="${IREE_BYOLLVM_INSTALL_DIR}/llvm"
   mlir_build_dir="${IREE_BYOLLVM_BUILD_DIR}/mlir"
-  mlir_install_dir="${IREE_BYOLLVM_INSTALL_DIR}/mlir"
+  mlir_install_dir="${IREE_BYOLLVM_INSTALL_DIR}/llvm"
 
   cmake_options="-DLLVM_DIR='${main_install_dir}/lib/cmake/llvm'"
-  cmake_options="${cmake_options} -DPython3_EXECUTABLE='$(which $python3_command)'"
-  cmake_options="${cmake_options} -DMLIR_ENABLE_BINDINGS_PYTHON=ON"
+  # cmake_options="${cmake_options} -DPython3_EXECUTABLE='$(which $python3_command)'"
+  # cmake_options="${cmake_options} -DMLIR_ENABLE_BINDINGS_PYTHON=ON"
   cmake_options="${cmake_options} -DCMAKE_INSTALL_PREFIX=${mlir_install_dir}"
   cmake_options="${cmake_options} -C $TD/mlir_config.cmake"
   cmake_options="${cmake_options} $(print_toolchain_config)"
@@ -131,14 +131,14 @@ do_build_mlir() {
   # sources needed to build downstream Python bindings. Once this is fixed,
   # we should use the more fine grained install target.
   cmake --build "${mlir_build_dir}" \
-    --target install
+    --target install-mlirdevelopment-distribution
 }
 
 print_iree_config() {
   llvm_cmake_dir="${IREE_BYOLLVM_INSTALL_DIR}/llvm/lib/cmake/llvm"
   lld_cmake_dir="${IREE_BYOLLVM_INSTALL_DIR}/llvm/lib/cmake/lld"
   clang_cmake_dir="${IREE_BYOLLVM_INSTALL_DIR}/llvm/lib/cmake/clang"
-  mlir_cmake_dir="${IREE_BYOLLVM_BUILD_DIR}/mlir/lib/cmake/mlir"
+  mlir_cmake_dir="${IREE_BYOLLVM_INSTALL_DIR}/llvm/lib/cmake/mlir"
 
   if ! [ -d "$llvm_cmake_dir" ]; then
     echo "WARNING: CMake dir does not exist ($llvm_cmake_dir)" >&2
@@ -166,8 +166,8 @@ do_build_iree() {
   iree_install_dir="${IREE_BYOLLVM_INSTALL_DIR}/iree"
 
   cmake_options="$(print_iree_config)"
-  cmake_options="${cmake_options} -DPython3_EXECUTABLE='$(which $python3_command)'"
-  cmake_options="${cmake_options} -DIREE_BUILD_PYTHON_BINDINGS=ON"
+  # cmake_options="${cmake_options} -DPython3_EXECUTABLE='$(which $python3_command)'"
+  # cmake_options="${cmake_options} -DIREE_BUILD_PYTHON_BINDINGS=ON"
   # Feel free to manually enable or disable any backend, for example
   #   -DIREE_TARGET_BACKEND_LLVM_CPU=OFF
   # Be aware though that several tests in IREE's own suite are currently
